@@ -26,12 +26,12 @@ public class ObstacleMapping extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize hardware components
-        DcMotor leftFront = hardwareMap.get(DcMotor.class, "left_front");
-        DcMotor rightFront = hardwareMap.get(DcMotor.class, "right_front");
-        DcMotor leftRear = hardwareMap.get(DcMotor.class, "left_rear");
-        DcMotor rightRear = hardwareMap.get(DcMotor.class, "right_rear");
-        DcMotor verticalEncoder = hardwareMap.get(DcMotor.class, "vertical_encoder");
-        DcMotor horizontalEncoder = hardwareMap.get(DcMotor.class, "horizontal_encoder");
+//        DcMotor leftFront = hardwareMap.get(DcMotor.class, "left_front");
+//        DcMotor rightFront = hardwareMap.get(DcMotor.class, "right_front");
+//        DcMotor leftRear = hardwareMap.get(DcMotor.class, "left_back");
+//        DcMotor rightRear = hardwareMap.get(DcMotor.class, "right_back");
+//        DcMotor verticalEncoder = hardwareMap.get(DcMotor.class, "vertical_encoder");
+//        DcMotor horizontalEncoder = hardwareMap.get(DcMotor.class, "horizontal_encoder");
 
         robot = new SimplifiedOdometryRobot(this);
         laserSensor = hardwareMap.get(Rev2mDistanceSensor.class, "laserSensor");
@@ -43,7 +43,7 @@ public class ObstacleMapping extends LinearOpMode {
 
         for (int step = 0; step < 10; step++) {
             scanSurroundings();
-            moveToSafeLocation();
+//            moveToSafeLocation();
         }
 
         printGrid();
@@ -85,22 +85,22 @@ public class ObstacleMapping extends LinearOpMode {
     }
 
     // Move to the closest non-obstacle location
-    private void moveToSafeLocation() {
-        int robotGridX = (int) (odo.getEncoderX() / CELL_SIZE);
-        int robotGridY = (int) (odo.getEncoderY() / CELL_SIZE);
-
-        int[] newPosition = findClosestOpenSpace(robotGridX, robotGridY);
-        if (newPosition != null) {
-            robot.moveRobot(newPosition[0] * CELL_SIZE,newPosition[1] * CELL_SIZE, odo.getHeading());
-            // moveTo( );
-            sleep(2000);
-            telemetry.addData("Moving to", "(" + newPosition[0] + ", " + newPosition[1] + ")");
-            telemetry.update();
-        } else {
-            telemetry.addData("No safe space found!", "Robot remains in place.");
-            telemetry.update();
-        }
-    }
+//    private void moveToSafeLocation() {
+//        int robotGridX = (int) (odo.getEncoderX() / CELL_SIZE);
+//        int robotGridY = (int) (odo.getEncoderY() / CELL_SIZE);
+//
+//        int[] newPosition = findClosestOpenSpace(robotGridX, robotGridY);
+//        if (newPosition != null) {
+//            robot.moveRobot(newPosition[0] * CELL_SIZE,newPosition[1] * CELL_SIZE, odo.getHeading());
+//            // moveTo( );
+//            sleep(2000);
+//            telemetry.addData("Moving to", "(" + newPosition[0] + ", " + newPosition[1] + ")");
+//            telemetry.update();
+//        } else {
+//            telemetry.addData("No safe space found!", "Robot remains in place.");
+//            telemetry.update();
+//        }
+//    }
 
     // Finds the nearest open space using Breadth-First Search (BFS)
     private int[] findClosestOpenSpace(int startX, int startY) {
