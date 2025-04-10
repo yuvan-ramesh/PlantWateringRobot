@@ -95,9 +95,10 @@ public class ObstacleMapping extends LinearOpMode {
 
         int[] newPosition = findClosestOpenSpace(robotGridX, robotGridY);
         if (newPosition != null) {
-            robot.moveRobot(newPosition[0] * CELL_SIZE,newPosition[1] * CELL_SIZE, odo.getHeading());
+            //robot.moveRobot(newPosition[0] * CELL_SIZE,newPosition[1] * CELL_SIZE, odo.getHeading());
             // moveTo( );
             sleep(2000);
+            telemetry.addData("current position", odo.getPosition() );
             telemetry.addData("Moving to", "(" + newPosition[0] + ", " + newPosition[1] + ")");
             telemetry.update();
         } else {

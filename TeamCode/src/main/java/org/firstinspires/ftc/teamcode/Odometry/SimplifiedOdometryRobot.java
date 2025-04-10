@@ -104,7 +104,7 @@ public class SimplifiedOdometryRobot {
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
 
         //  Connect to the encoder channels using the name of that channel.
-//        driveEncoder = myOpMode.hardwareMap.get(DcMotor.class, "axial");
+//         = myOpMode.hardwareMap.get(DcMotor.class, "axial");
 //        strafeEncoder = myOpMode.hardwareMap.get(DcMotor.class, "lateral");
         odo = myOpMode.hardwareMap.get(GoBildaPinpointDriver.class,"odo");
 
@@ -292,10 +292,10 @@ public class SimplifiedOdometryRobot {
         }
 
         //send power to the motors
-        leftFrontDrive.setPower(lF);
-        rightFrontDrive.setPower(rF);
-        leftBackDrive.setPower(lB);
-        rightBackDrive.setPower(rB);
+        leftFrontDrive.setPower(lF * 0.3);
+        rightFrontDrive.setPower(rF * 0.3);
+        leftBackDrive.setPower(lB * 0.3);
+        rightBackDrive.setPower(rB * 0.3);
 
         if (showTelemetry) {
             myOpMode.telemetry.addData("Axes D:S:Y", "%5.2f %5.2f %5.2f", drive, strafe, yaw);
