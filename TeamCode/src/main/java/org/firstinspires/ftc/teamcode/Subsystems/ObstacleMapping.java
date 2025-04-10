@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Odometry.SimplifiedOdometryRobot;
 import java.util.LinkedList;
 import java.util.Queue;
 
+@Autonomous(name = "Obstacle Mapping Auto", group = "Autonomous")
 public class ObstacleMapping extends LinearOpMode {
     private SimplifiedOdometryRobot robot;
     private Rev2mDistanceSensor laserSensor;
@@ -25,15 +27,17 @@ public class ObstacleMapping extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+//        DcMotor leftFront = hardwareMap.get(DcMotor.class, "frontLeft");
+//        DcMotor rightFront = hardwareMap.get(DcMotor.class, "frontRight");
+//        DcMotor leftRear = hardwareMap.get(DcMotor.class, "backLeft");
+//        DcMotor rightRear = hardwareMap.get(DcMotor.class, "backRight");
+
         // Initialize hardware components
-//        DcMotor leftFront = hardwareMap.get(DcMotor.class, "left_front");
-//        DcMotor rightFront = hardwareMap.get(DcMotor.class, "right_front");
-//        DcMotor leftRear = hardwareMap.get(DcMotor.class, "left_back");
-//        DcMotor rightRear = hardwareMap.get(DcMotor.class, "right_back");
-//        DcMotor verticalEncoder = hardwareMap.get(DcMotor.class, "vertical_encoder");
-//        DcMotor horizontalEncoder = hardwareMap.get(DcMotor.class, "horizontal_encoder");
+
 
         robot = new SimplifiedOdometryRobot(this);
+        robot.initialize(true);
+
         laserSensor = hardwareMap.get(Rev2mDistanceSensor.class, "laserSensor");
         servo = hardwareMap.get(Servo.class, "servo");
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
@@ -43,7 +47,7 @@ public class ObstacleMapping extends LinearOpMode {
 
         for (int step = 0; step < 10; step++) {
             scanSurroundings();
-//            moveToSafeLocation();
+            moveToSafeLocation();
         }
 
         printGrid();
@@ -85,22 +89,22 @@ public class ObstacleMapping extends LinearOpMode {
     }
 
     // Move to the closest non-obstacle location
-//    private void moveToSafeLocation() {
-//        int robotGridX = (int) (odo.getEncoderX() / CELL_SIZE);
-//        int robotGridY = (int) (odo.getEncoderY() / CELL_SIZE);
-//
-//        int[] newPosition = findClosestOpenSpace(robotGridX, robotGridY);
-//        if (newPosition != null) {
-//            robot.moveRobot(newPosition[0] * CELL_SIZE,newPosition[1] * CELL_SIZE, odo.getHeading());
-//            // moveTo( );
-//            sleep(2000);
-//            telemetry.addData("Moving to", "(" + newPosition[0] + ", " + newPosition[1] + ")");
-//            telemetry.update();
-//        } else {
-//            telemetry.addData("No safe space found!", "Robot remains in place.");
-//            telemetry.update();
-//        }
-//    }
+    private void moveToSafeLocation() {
+        int robotGridX = (int) (odo.getEncoderX() / CELL_SIZE);
+        int robotGridY = (int) (odo.getEncoderY() / CELL_SIZE);
+
+        int[] newPosition = findClosestOpenSpace(robotGridX, robotGridY);
+        if (newPosition != null) {
+            robot.moveRobot(newPosition[0] * CELL_SIZE,newPosition[1] * CELL_SIZE, odo.getHeading());
+            // moveTo( );
+            sleep(2000);
+            telemetry.addData("Moving to", "(" + newPosition[0] + ", " + newPosition[1] + ")");
+            telemetry.update();
+        } else {
+            telemetry.addData("No safe space found!", "Robot remains in place.");
+            telemetry.update();
+        }
+    }
 
     // Finds the nearest open space using Breadth-First Search (BFS)
     private int[] findClosestOpenSpace(int startX, int startY) {

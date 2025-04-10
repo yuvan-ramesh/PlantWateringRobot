@@ -62,8 +62,9 @@ public class SimplifiedOdometryRobot {
     private DcMotor leftBackDrive;      //  control the left back drive wheel
     private DcMotor rightBackDrive;     //  control the right back drive wheel
 
-    private DcMotor driveEncoder;       //  the Axial (front/back) Odometry Module (may overlap with motor, or may not)
-    private DcMotor strafeEncoder;      //  the Lateral (left/right) Odometry Module (may overlap with motor, or may not)
+//    private DcMotor driveEncoder;       //  the Axial (front/back) Odometry Module (may overlap with motor, or may not)
+//    private DcMotor strafeEncoder;      //  the Lateral (left/right) Odometry Module (may overlap with motor, or may not)
+    private GoBildaPinpointDriver odo;
 
     private LinearOpMode myOpMode;
     private IMU imu;
@@ -96,15 +97,16 @@ public class SimplifiedOdometryRobot {
         // motor/device must match the names assigned during the robot configuration.
 
         // !!!  Set the drive direction to ensure positive power drives each wheel forward.
-        leftFrontDrive  = setupDriveMotor("leftfront_drive", DcMotor.Direction.REVERSE);
-        rightFrontDrive = setupDriveMotor("rightfront_drive", DcMotor.Direction.FORWARD);
-        leftBackDrive  = setupDriveMotor( "leftback_drive", DcMotor.Direction.REVERSE);
-        rightBackDrive = setupDriveMotor( "rightback_drive",DcMotor.Direction.FORWARD);
+        leftFrontDrive  = setupDriveMotor("frontLeft", DcMotor.Direction.REVERSE);
+        rightFrontDrive = setupDriveMotor("frontRight", DcMotor.Direction.FORWARD);
+        leftBackDrive  = setupDriveMotor( "backLeft", DcMotor.Direction.REVERSE);
+        rightBackDrive = setupDriveMotor( "backRight",DcMotor.Direction.FORWARD);
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
 
         //  Connect to the encoder channels using the name of that channel.
-        driveEncoder = myOpMode.hardwareMap.get(DcMotor.class, "axial");
-        strafeEncoder = myOpMode.hardwareMap.get(DcMotor.class, "lateral");
+//        driveEncoder = myOpMode.hardwareMap.get(DcMotor.class, "axial");
+//        strafeEncoder = myOpMode.hardwareMap.get(DcMotor.class, "lateral");
+        odo = myOpMode.hardwareMap.get(GoBildaPinpointDriver.class,"odo");
 
         // Set all hubs to use the AUTO Bulk Caching mode for faster encoder reads
         List<LynxModule> allHubs = myOpMode.hardwareMap.getAll(LynxModule.class);
@@ -137,6 +139,8 @@ public class SimplifiedOdometryRobot {
         aMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);  // Reset Encoders to zero
         aMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         aMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);  // Requires motor encoder cables to be hooked up.
+        myOpMode.telemetry.addData("Motor power", aMotor.getPower());
+        aMotor.setPower(0);
         return aMotor;
     }
 
@@ -146,8 +150,8 @@ public class SimplifiedOdometryRobot {
      * @return true
      */
     public boolean readSensors() {
-        rawDriveOdometer = driveEncoder.getCurrentPosition() * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
-        rawStrafeOdometer = strafeEncoder.getCurrentPosition() * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
+        rawDriveOdometer = odo.getEncoderX() * (INVERT_DRIVE_ODOMETRY ? -1 : 1);
+        rawStrafeOdometer = odo.getEncoderY() * (INVERT_STRAFE_ODOMETRY ? -1 : 1);
         driveDistance = (rawDriveOdometer - driveOdometerOffset) * ODOM_INCHES_PER_COUNT;
         strafeDistance = (rawStrafeOdometer - strafeOdometerOffset) * ODOM_INCHES_PER_COUNT;
 
